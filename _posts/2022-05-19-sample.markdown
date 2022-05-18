@@ -1,0 +1,28 @@
+---
+title: Template Page
+date: 2022-05-19 00:42:00 +0900
+categories: [Template, Main]
+tags: [template]     # TAG names should always be lowercase
+---
+
+# Use the examples generated below
+
+```c
+#include <stdio.h>
+
+int main()
+{
+    printf("Hello world\n");
+    return 0;
+}
+```
+```shell
+$ sudo apt update && sudo apt upgrade
+```
+```python
+print("Hello world")
+```
+```shell
+Hello world
+```
+{: file="/home/heejoon/hello.txt" }
