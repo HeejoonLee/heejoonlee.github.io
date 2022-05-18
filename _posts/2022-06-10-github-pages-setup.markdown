@@ -62,7 +62,7 @@ Could not locate Gemfile
 * visibility: public
 
 2. Clone the GitHub Pages repo just created:
-```
+```shell
 ~$ git clone https://github.com/[username]/[username].github.io.git
 ```
 
