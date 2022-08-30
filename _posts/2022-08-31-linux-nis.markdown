@@ -1,0 +1,110 @@
+---
+title: "[Linux] NIS"
+date: 2022-08-31 02:20 +0900
+categories: [etc, Linux]
+tags: [Linux, guide]
+---
+
+# NIS(Network Information Service)
+
+**NIS** allows a single server to provide login information to other machines.
+
+## Setup
+
+### Server
+
+1. Required daemons:
+
+    Daemon | Description
+    --- | ---
+    ypserv | Main NIS server daemon
+    yppasswdd | Set password
+    ypxfrd | Improve mapping performance
+
+
+2. Start and enable daemons:
+
+    ```shell
+    $ systemctl start ypserv yppasswdd ypxfrd
+    $ systemctl enable ypserv yppasswdd ypxfrd
+    ```
+
+3. Set NIS domain name:
+
+    * Use `nisdomainname`:
+
+        ```shell
+        $ nisdomainname testdomain.co.kr
+        ```
+    
+    * Add `NISDOMAIN` to `/etc/sysconfig/network`:
+
+        ```shell
+        $ vi /etc/sysconfig/network
+        NISDOMAIN=testdomain.co.kr
+        ``` 
+
+4. Refresh info
+
+    Whenever the NIS information is changed(a new user is added, ...), recompilation is required.
+
+    ```shell
+    $ cd /var/yp ; make
+    ```
+
+    Example output:
+    ```shell
+    $ cd /var/yp ; make
+    $ ls
+    Makefile testdomain.co.kr
+    $ ls testdomain.co.kr
+    group.bygid     mail.aliases    protocols.byname    services.byname
+    hosts.byaddr    passwd.byname
+    ```
+
+### Client
+
+1. Required packages:
+
+    Package | Description
+    --- | ---
+    ypbind | Main NIS client daemon
+    yp-tools | Tools for configuring NIS
+
+2. Set NIS domain:
+
+    * Use `nisdomainname`:
+
+        ```shell
+        $ nisdomainname testdomain.co.kr
+        ```
+    
+    * Add `NISDOMAIN` to `/etc/sysconfig/network`
+
+3. Set NIS server and domain in config file `/etc/yp.conf`:
+
+    ```shell
+    $ vi /etc/yp.conf
+    server nis.testdomain.co.kr
+    ypserver nis.testdomain.co.kr
+    domain testdomain.co.kr
+    ```
+
+4. Start daemons
+
+    ```shell
+    $ systemctl start ypbind
+    $ systemctl enable ypbind
+    ```
+
+## Commands
+
+Command | Description | Usage
+--- | --- | ---
+nisdomainname | Show/set NIS domain name | <code>$ nisdomainname</code> <br> → Show NIS domain <br> <code> $ nisdomainname test.or.kr </code> <br> → Set NIS domain to test.or.kr
+ypwhich | NIS client. Show server name, map file names | <code>$ ypwhich</code> <br> → Show NIS server name <br> <code>$ ypwhich -m</code> <br> → Show NIS map file names
+ypcat | NIS client. Check the content of NIS map files | <code>$ ypcat hosts.byname </code> <br> → Print hosts.byname NIS map file content
+yptest | NIS client. Check NIS settings | <code>$ yptest</code>
+yppasswd | NIS client. Change password of a user | <code>$ yppasswd heejoon</code> <br> → Change the password of an NIS user heejoon
+ypchsh | NIS client. Change the shell of a user | <code>$ ypchsh heejoon</code> <br> → Change the default shell of an NIS user heejoon
+ypchfn | NIS client. Change the info of a user | <code>$ ypfn heejoon</code> <br> → Change the information of an NIS user heejoon
