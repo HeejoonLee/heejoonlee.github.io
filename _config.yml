@@ -23,7 +23,7 @@ timezone: Asia/Seoul
 
 title: Budding dev                          # the main title
 
-tagline: Until the day of becoming a true developer   # it will display as the sub-title
+tagline: Under development   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   An IT blog 
