@@ -1,0 +1,69 @@
+---
+title: "[Linux] NFS"
+date: 2022-09-01 00:20 +0900
+categories: [Linux, Network]
+tags: [Linux, guide]
+---
+
+# NFS(Network File System)
+
+**NFS** was developed by Sun Microsystems in 1984. NFS is implemented using RPC(remote procedure call)(just as in NIS, which is another product of Sun Microsystems).
+
+## Daemons
+
+Daemon | Description
+--- | ---
+`rpcbind` | Remote procedure call daemon. Used to be `portmap`
+`nfs-server` | NFS server daemon
+
+## Server Configuration
+
+`/etc/exports`
+
+* Usage: Directory_path    Host(options)    [Host(options) ...]
+
+```shell
+$ vi /etc/exports
+/nfsdata    192.168.5.13
+/nfsdata1   192.168.5.0/255.255.255.0(rw,root_squash)  // Read write, map a client logging in as 'root' to 'nobody'
+/nfsdata2   192.168.12.0/24(rw,no_root_squash)  // Allow 'root' to stay as 'root'
+/nfsdata3   *.domain.or.kr(rw,all_squash)  // Map every account to 'nobody'(including 'root')
+/home/heejoon    mymachine(rw,all_squash,anonuid=500,anongid=500)  // Map uid and gid to 500
+```
+
+## Commands
+
+### NFS Server
+
+1. `exportfs`
+
+    Show exported(shared) directories in the server(/etc/exports content)
+
+2. `showmount`
+
+    Show mounted clients
+
+    > `showmount` can also be used on NFS client to show the server's exported directories: `$ showmount -e server_host`
+
+3. `nfsstat`
+
+    Show NFS status. It can also be used in an NFS client.
+
+### NFS Client
+
+1. `mount.nfs`
+
+    Mount exported NFS server directory
+
+    * Usage: `mount.nfs host_ip:dir mount_dir`
+
+    * Examples
+
+    `$ mount.nfs 192.168.5.13:/nfsdata /mnt`
+
+    `$ mount -t nfs 192.168.5.13:/nfsdata /mnt` can also be used
+    
+
+
+
+

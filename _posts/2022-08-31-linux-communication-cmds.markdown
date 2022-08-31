@@ -1,7 +1,7 @@
 ---
 title: "[Linux] Communication Commands"
 date: 2022-08-31 01:48 +0900
-categories: [etc, Linux]
+categories: [Linux, Commands]
 tags: [Linux, guide]
 ---
 

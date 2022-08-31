@@ -4,7 +4,6 @@ date: 2022-08-31 23:04 +0900
 categories: [Linux, Network]
 tags: [Linux, guide]
 ---
-
 # SAMBA
 
 **SAMBA** allows Unix and Windows systems to communicate with each other using the CIFS protocol.
@@ -35,6 +34,9 @@ $ vi /etc/samba/smb.conf
    #hosts allow = 192.168.1. EXCEPT 192.168.1.220  // Allow all IPs in network 192.168.1. except for 192.168.1.220
    #hosts allow = 192.168.1.0/255.255.255.0  // Network IPs can be set using netmask
    #hosts allow = heejoon_pc, hj_macbook  // Specify using host name
+    hosts deny = 192.168.0.4  // Block IPs
+    security = user  // User must specify username and password when connecting
+   #security = share  // No need to specify password
 
 [shared]  # Disk name shown in Windows when connected
     comment = Shared directory

@@ -1,7 +1,7 @@
 ---
 title: "[Linux] GRUB"
 date: 2022-08-31 01:38 +0900
-categories: [etc, Linux]
+categories: [Linux, Bootloader]
 tags: [Linux, guide]
 ---
 
