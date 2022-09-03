@@ -19,15 +19,15 @@ $ brew upgrade
 1. Check installed Brew packages: `$ brew list`
 2. Update repository: `$ brew update`
 
-    ![brew_update](brew_update.png)
+    <img src="brew_update.png" alt="brew_update" width="500"/>
 
 3. Check outdated packages: `$ brew outdated`
 
-    ![brew_outdated](brew_outdated.png)
+    <img src="brew_outdated.png" alt="brew_outdated" width="500"/>
 
 4. Upgrade outdated packages: `$ brew upgrade`
 
-    ![brew_upgrade](brew_upgrade.png)
+    <img src="brew_upgrade.png" alt="brew_upgrade" width="500"/>
 
     This process may take a while depending on the number of packages that need to be upgraded.
 
