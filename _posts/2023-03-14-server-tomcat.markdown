@@ -1,8 +1,8 @@
 ---
-title: "[Linux] Tomcat [1] - Setting Up Tomcat"
+title: "Tomcat [1] - Setting Up Tomcat"
 date: 2023-03-14 22:38:00 +0900
-categories: [linux, tomcat]
-tags: [linux, tomcat, server]
+categories: [Web, Web/Tomcat]
+tags: [linux, tomcat, server, web]
 img_path: 
 ---
 
