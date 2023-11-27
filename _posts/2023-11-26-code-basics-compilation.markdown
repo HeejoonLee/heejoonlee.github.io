@@ -85,6 +85,8 @@ COLLECT_GCC_OPTIONS='-v' '-o' 'main' '-mtune=generic' '-march=x86-64'
 GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38
 ```
 
+The gcc assembler `as` assembles the *.s* assembly file into the object file `/tmp/ccwGdyaH.o`
+
 #### Linker: `collect2`
 ```
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/
@@ -93,6 +95,29 @@ COLLECT_GCC_OPTIONS='-v' '-o' 'main' '-mtune=generic' '-march=x86-64' '-dumpdir'
  /usr/lib/gcc/x86_64-linux-gnu/11/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper -plugin-opt=-fresolution=/tmp/cci2UbDA.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o main /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/11/../../.. /tmp/ccwGdyaH.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o
 COLLECT_GCC_OPTIONS='-v' '-o' 'main' '-mtune=generic' '-march=x86-64' '-dumpdir' 'main.'
 ```
+This is the last step of gcc compilation, the linking step. We can see that the name of the linker executable is `collect2` with various options following it. What we need to focus on are the flags `-L` and `-l`, which tell the linker where and which library functions to include in the final executable object file.
 
->> TODO: as, collect2 explanation, Second source file which shows the use of external library(libquadmath), Compiling ans using static library, Compiling and using dynamic library
+`-L<path>` tells the linker that a library file *may be* located in the directory pointed by *path* and should search that directory.  `-L<path>` is a shorthand form of `--library-path=<path>`.
+
+`-l<lib>` indicates the actual name of the library file, `llib.so` for dynamic, and `llib.a` for static library file. `gcc` is configured to look for `.so` dynamic library files by default; if both `.so` and `.a` exist with the same name, the `.so` file will be linked. `-l<lib>` is a shorthand form of `--library=<lib>`
+
+One other flag to note is the `--as-needed` flag which tells the linker to only include the dynamic library appearing right after it *if it is needed*. 
+
+Going back to the output above, the dynamic libraries to be linked are the `libgcc.a`(from `-lgcc`) and `libc.so`(from `-lc`). (`-lgcc_s` is optional, so it may be not be linked if not needed).
+
+A simple search in the root filesystem lets us point out where exactly the dynamic library files are. 
+
+`libc.so` is located in `/lib/x86_64-linux-gnu/libc.so.6`. This is also apparent from the `ldd` output.
+
+`libgcc.a` is located in `/usr/lib/gcc/x86_64-linux-gnu/11/libgcc.a`. It turned out that the `libgcc` is in fact a *static library*, which is the reason why `libgcc` did not show up in the `ldd` output.
+
+Do note that the directories in which the two library files reside were specified using the `-L` flag.
+
+> We can also see that although the output from `as` is only `/tmp/ccwGdyaH.o`, it is linked with two other object files, `crtendS.o` and `crtn.o`, to produce the final exectuable file `main`. 
+
+### Compiling And Using a Custom Static Library
+
+### Compiling And Using a Custom Dynamic Library
+
+>> Second source file which shows the use of external library(libquadmath), Compiling ans using static library, Compiling and using dynamic library
 
